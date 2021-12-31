@@ -3,20 +3,17 @@
 from typing import List
 
 from singer_sdk import Tap, Stream
-from singer_sdk import typing as th  # JSON schema typing helpers
+from singer_sdk import typing as th
 
-# TODO: Import your custom stream types here:
 from tap_sleeper.streams import (
     SleeperStream,
-    UsersStream,
-    GroupsStream,
+    TrendingPlayersUpStream,
+    TrendingPlayersDownStream,
 )
 
-# TODO: Compile a list of custom stream types here
-#       OR rewrite discover_streams() below with your custom logic.
 STREAM_TYPES = [
-    UsersStream,
-    GroupsStream,
+    TrendingPlayersUpStream,
+    TrendingPlayersDownStream,
 ]
 
 
@@ -26,12 +23,18 @@ class TapSleeper(Tap):
     name = "tap-sleeper"
     config_jsonschema = th.PropertiesList(
         th.Property(
-            "league_id",
-            th.StrinType,
-            requred=True,
-            description="Unique identifier for the sleeper league"
+            "sport",
+            th.StringType,
+            required=True,
+            default="nfl",
+            description="Professional sport league that the fantasy league is associated with, ie nfl, nba, etc",
         ),
-        # grab all the users in the league, then pull all players
+        th.Property(
+            "league_id",
+            th.StringType,
+            required=True,
+            description="Unique identifier for the sleeper league",
+        ),
     ).to_dict()
 
     def discover_streams(self) -> List[Stream]:
