@@ -5,6 +5,6 @@ schema = th.PropertiesList(
     th.Property(
         "count",
         th.IntegerType,
-        description="The total number of add or drop events for that player within the lookback period",
+        description="The total add/drop events for a player within lookback period",
     ),
 ).to_dict()
