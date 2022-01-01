@@ -1,8 +1,6 @@
 """Stream type classes for tap-sleeper."""
 
-import requests
-from pathlib import Path
-from typing import Any, Dict, Optional, Union, List, Iterable
+from typing import Any, Dict, Optional
 
 from singer_sdk import typing as th  # JSON Schema typing helpers
 from singer_sdk.helpers.jsonpath import extract_jsonpath
@@ -31,16 +29,16 @@ class TrendingPlayersStream(SleeperStream):
         return params
 
 
-class TrendingPlayersUpStream(TrendingPlayersStream):
-    name = "trending-players-up"
+class TrendingUpPlayersStream(TrendingPlayersStream):
+    name = "trending-up-players"
 
     def get_url(self, context: Optional[dict]) -> str:
         url = self.url_base + self.path.format(sport=self.config["sport"], type="add")
         return url
 
 
-class TrendingPlayersDownStream(TrendingPlayersStream):
-    name = "trending-players-down"
+class TrendingDownPlayersStream(TrendingPlayersStream):
+    name = "trending-down-players"
 
     def get_url(self, context: Optional[dict]) -> str:
         url = self.url_base + self.path.format(sport=self.config["sport"], type="drop")
