@@ -2,8 +2,6 @@
 
 from typing import Any, Dict, Optional
 
-from singer_sdk import typing as th  # JSON Schema typing helpers
-from singer_sdk.helpers.jsonpath import extract_jsonpath
 from singer_sdk.streams import RESTStream
 
 from tap_sleeper import schemas

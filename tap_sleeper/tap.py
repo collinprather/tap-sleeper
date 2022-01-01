@@ -26,7 +26,7 @@ class TapSleeper(Tap):
             th.StringType,
             required=True,
             default="nfl",
-            description="Professional sport league that the fantasy league is associated with, ie nfl, nba, etc",
+            description="Professional sport league, ie nfl, nba, etc",
         ),
         th.Property(
             "league_id",
