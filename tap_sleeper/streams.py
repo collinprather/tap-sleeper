@@ -10,7 +10,6 @@ from tap_sleeper import schemas
 
 
 class SleeperStream(RESTStream):
-
     url_base = "https://api.sleeper.app/v1"
     records_jsonpath = "$[*]"
 
