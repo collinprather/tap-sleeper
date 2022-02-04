@@ -16,3 +16,4 @@ def test_standard_tap_tests():
 
 
 # TODO: Create additional tests as appropriate for your tap.
+test_standard_tap_tests()
