@@ -67,7 +67,7 @@ class LeagueStream(SleeperStream):
         return url
 
     def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
-        context = {"league_id": record["league_id"]}
+        context = {"league_id": record["league_id"], "week": context["week"]}
         return context
 
 
@@ -86,10 +86,14 @@ class LeagueUsersStream(LeagueStream):
 
 
 class LeagueMatchupsStream(LeagueStream):
-    path = "/league/{league_id}/matchup/{week}"
+    path = "/league/{league_id}/matchups/{week}"
     schema = schemas.league_matchups
     name = "league-matchups"
     parent_stream_type = LeagueStream
+
+    def get_url(self, context: Optional[dict]) -> str:
+        url = self.url_base + self.path.format(league_id=context["league_id"], week=context["week"])
+        return url
 
 
 class LeaguePlayoffBracketStream(LeagueStream):
