@@ -48,3 +48,12 @@ league_users = th.PropertiesList(
     th.Property("is_owner", th.BooleanType),
     th.Property("metadata", th.ObjectType(th.Property("team_name", th.StringType))),
 ).to_dict()
+
+league_matchups = th.PropertiesList(
+    th.Property("starters", th.ArrayType(th.StringType)),
+    th.Property("players", th.ArrayType(th.StringType)),
+    th.Property("roster_id", th.IntegerType),
+    th.Property("matchup_id", th.IntegerType),
+    th.Property("points", th.NumberType),
+    th.Property("custom_points", th.NumberType),
+).to_dict()

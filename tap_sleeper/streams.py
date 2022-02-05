@@ -42,10 +42,25 @@ class TrendingDownPlayersStream(TrendingPlayersStream):
         return url
 
 
+class SportStateStream(SleeperStream):
+    path = "/state/{sport}"
+    schema = schemas.sport_state
+    name = "sport-state"
+
+    def get_url(self, context: Optional[dict]) -> str:
+        url = self.url_base + self.path.format(sport=self.config["sport"])
+        return url
+
+    def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
+        context = {"week": record["leg"]}
+        return context
+
+
 class LeagueStream(SleeperStream):
     path = "/league/{league_id}"
     schema = schemas.league
     name = "league"
+    parent_stream_type = SportStateStream
 
     def get_url(self, context: Optional[dict]) -> str:
         url = self.url_base + self.path.format(league_id=self.config["league_id"])
@@ -72,7 +87,7 @@ class LeagueUsersStream(LeagueStream):
 
 class LeagueMatchupsStream(LeagueStream):
     path = "/league/{league_id}/matchup/{week}"
-    # schema = schemas.league_matchups
+    schema = schemas.league_matchups
     name = "league-matchups"
     parent_stream_type = LeagueStream
 
@@ -136,16 +151,6 @@ class LeagueTradedDraftPicksStream(LeagueDraftsStream):
     # schema = schemas.league_traded_draft_picks
     name = "league-traded-draft-picks"
     parent_stream_type = LeagueDraftsStream
-
-
-class SportStateStream(SleeperStream):
-    path = "/state/{sport}"
-    # schema = schemas.sport_state
-    name = "sport-state"
-
-    def get_url(self, context: Optional[dict]) -> str:
-        url = self.url_base + self.path.format(sport=self.config["sport"])
-        return url
 
 
 class SportPlayersStream(SleeperStream):
