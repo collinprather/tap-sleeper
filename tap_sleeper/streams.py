@@ -1,7 +1,9 @@
 """Stream type classes for tap-sleeper."""
 
-from typing import Any, Dict, Optional
+import copy
+from typing import Any, Dict, Optional, Iterable, cast
 
+import requests
 from singer_sdk.streams import RESTStream
 
 from tap_sleeper import schemas
@@ -85,49 +87,101 @@ class LeagueUsersStream(LeagueStream):
     parent_stream_type = LeagueStream
 
 
-class LeagueMatchupsStream(LeagueStream):
+class LeagueWeeklyStream(LeagueStream):
+    def request_records(self, context: Optional[dict]) -> Iterable[dict]:
+        """Request records from REST endpoint(s), returning response records.
+
+        Args:
+            context: Stream partition or context dictionary.
+
+        Yields:
+            An item for every record in the response.
+        """
+        decorated_request = self.request_decorator(self._request)
+
+        # looping from beginning of season to current week
+        for replication_week in range(1, context["week"] + 1):
+            context["replication_week"] = replication_week
+            prepared_request = self.prepare_request(context, next_page_token=None)
+            resp = decorated_request(prepared_request, context)
+            for row in self.parse_response(resp):
+                yield row
+
+    def post_process(self, row: dict, context: Optional[dict] = None) -> Optional[dict]:
+        row["league_id"] = context["league_id"]
+        row["week"] = context["replication_week"]
+        return row
+
+    def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
+        return context
+
+    def get_url(self, context: Optional[dict]) -> str:
+        url = self.url_base + self.path.format(
+            league_id=context["league_id"], week=context.get("replication_week", 1)
+        )
+        return url
+
+
+class LeagueMatchupsStream(LeagueWeeklyStream):
     path = "/league/{league_id}/matchups/{week}"
     schema = schemas.league_matchups
     name = "league-matchups"
     parent_stream_type = LeagueStream
 
-    def get_url(self, context: Optional[dict]) -> str:
-        url = self.url_base + self.path.format(league_id=context["league_id"], week=context["week"])
-        return url
+
+class LeagueTransactionsStream(LeagueWeeklyStream):
+    path = "/league/{league_id}/transactions/{week}"
+    schema = schemas.league_transactions
+    name = "league-transactions"
+    parent_stream_type = LeagueStream
 
 
 class LeaguePlayoffBracketStream(LeagueStream):
     path = "/league/{league_id}/{bracket_type}"
-    # schema = schemas.league_matchups
+    schema = schemas.league_playoff_bracket
     parent_stream_type = LeagueStream
+
+    def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
+        return context
+
+    def post_process(self, row: dict, context: Optional[dict] = None) -> Optional[dict]:
+        row["league_id"] = context["league_id"]
+        return row
 
 
 class LeaguePlayoffWinnersBracketStream(LeaguePlayoffBracketStream):
     name = "league-playoff-winners-bracket"
 
     def get_url(self, context: Optional[dict]) -> str:
-        url = self.url_base + self.path.format(bracket_type="winners_bracket")
+        url = self.url_base + self.path.format(
+            league_id=context["league_id"], bracket_type="winners_bracket"
+        )
         return url
+
+    def post_process(self, row: dict, context: Optional[dict] = None) -> Optional[dict]:
+        row = super().post_process(row, context)
+        row["bracket_type"] = "winners_bracket"
+        return row
 
 
 class LeaguePlayoffLosersBracketStream(LeaguePlayoffBracketStream):
     name = "league-playoff-losers-bracket"
 
     def get_url(self, context: Optional[dict]) -> str:
-        url = self.url_base + self.path.format(bracket_type="losers_bracket")
+        url = self.url_base + self.path.format(
+            league_id=context["league_id"], bracket_type="losers_bracket"
+        )
         return url
 
-
-class LeagueTransactionsStream(LeagueStream):
-    path = "/league/{league_id}/transactions/{round}"
-    # schema = schemas.league_transactions
-    name = "league-transactions"
-    parent_stream_type = LeagueStream
+    def post_process(self, row: dict, context: Optional[dict] = None) -> Optional[dict]:
+        row = super().post_process(row, context)
+        row["bracket_type"] = "losers_bracket"
+        return row
 
 
 class LeagueTradedPicksStream(LeagueStream):
     path = "/league/{league_id}/traded_picks"
-    # schema = schemas.league_transactions
+    # schema = schemas.league_traded_picks
     name = "league-traded-picks"
     parent_stream_type = LeagueStream
 
@@ -150,7 +204,7 @@ class LeagueDraftPicksStream(LeagueDraftsStream):
     parent_stream_type = LeagueDraftsStream
 
 
-class LeagueTradedDraftPicksStream(LeagueDraftsStream):
+class LeagueDraftTradedPicksStream(LeagueDraftsStream):
     path = "/draft/{draft_id}/traded_picks"
     # schema = schemas.league_traded_draft_picks
     name = "league-traded-draft-picks"
