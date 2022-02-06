@@ -4,7 +4,10 @@ from singer_sdk.testing import get_standard_tap_tests
 
 from tap_sleeper.tap import TapSleeper
 
-SAMPLE_CONFIG = {"sport": "nfl", "league_id": "706681154622795776"} #"782559862231064576"}
+SAMPLE_CONFIG = {
+    "sport": "nfl",
+    "league_id": "706681154622795776",
+}  # "782559862231064576"}
 
 
 # Run standard built-in tap tests from the SDK:

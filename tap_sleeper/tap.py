@@ -7,8 +7,11 @@ from singer_sdk import typing as th
 
 from tap_sleeper.streams import (
     LeagueMatchupsStream,
+    LeaguePlayoffWinnersBracketStream,
+    LeaguePlayoffLosersBracketStream,
     LeagueRostersStream,
     LeagueStream,
+    LeagueTransactionsStream,
     LeagueUsersStream,
     SportStateStream,
     TrendingDownPlayersStream,
@@ -16,13 +19,16 @@ from tap_sleeper.streams import (
 )
 
 STREAM_TYPES = [
-    LeagueStream,
-    LeagueRostersStream,
-    LeagueUsersStream,
     LeagueMatchupsStream,
-    TrendingUpPlayersStream,
-    TrendingDownPlayersStream,
+    LeaguePlayoffWinnersBracketStream,
+    LeaguePlayoffLosersBracketStream,
+    LeagueRostersStream,
+    LeagueStream,
+    LeagueTransactionsStream,
+    LeagueUsersStream,
     SportStateStream,
+    TrendingDownPlayersStream,
+    TrendingUpPlayersStream,
 ]
 
 
