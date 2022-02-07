@@ -181,9 +181,13 @@ class LeaguePlayoffLosersBracketStream(LeaguePlayoffBracketStream):
 
 class LeagueTradedPicksStream(LeagueStream):
     path = "/league/{league_id}/traded_picks"
-    # schema = schemas.league_traded_picks
+    schema = schemas.league_traded_picks
     name = "league-traded-picks"
     parent_stream_type = LeagueStream
+
+    def post_process(self, row: dict, context: Optional[dict] = None) -> Optional[dict]:
+        row["league_id"] = context["league_id"]
+        return row
 
 
 class LeagueDraftsStream(LeagueStream):

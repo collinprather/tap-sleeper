@@ -4,6 +4,7 @@ from tap_sleeper.schemas.league import (
     league_rosters,
     league_users,
     league_transactions,
+    league_traded_picks,
     league_playoff_bracket,
 )
 from tap_sleeper.schemas.sport_state import schema as sport_state
