@@ -164,7 +164,7 @@ league_playoff_bracket = th.PropertiesList(
     th.Property(
         "l",
         th.IntegerType,
-        description="	The roster_id of the losing team, if the match has been played.",
+        description="The roster_id of the losing team, if the match has been played.",
     ),
     th.Property(
         "t1_from",
@@ -176,4 +176,13 @@ league_playoff_bracket = th.PropertiesList(
         th.ObjectType(),
         description="Where t2 comes from, either winner or loser of the match id, necessary to show bracket progression.",
     ),
+).to_dict()
+
+league_traded_picks = th.PropertiesList(
+    th.Property("league_id", th.StringType),
+    th.Property("roster_id", th.IntegerType, description="roster_id of ORIGINAL owner"),
+    th.Property("owner_id", th.IntegerType, description="roster_id of current owner"),
+    th.Property("previous_owner_id", th.IntegerType, description="roster_id of the previous owner"),
+    th.Property("round", th.IntegerType, description="which round the pick is"),
+    th.Property("season", th.StringType, description="which season the pick is for"),
 ).to_dict()
