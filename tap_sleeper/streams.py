@@ -1,7 +1,7 @@
 """Stream type classes for tap-sleeper."""
 
 import copy
-from typing import Any, Dict, Optional, Iterable, cast
+from typing import Any, Dict, Iterable, Optional, cast
 
 import requests
 from singer_sdk.streams import RESTStream
@@ -192,25 +192,35 @@ class LeagueTradedPicksStream(LeagueStream):
 
 class LeagueDraftsStream(LeagueStream):
     path = "/league/{league_id}/drafts"
-    # schema = schemas.league_drafts
+    schema = schemas.league_drafts
     name = "league-drafts"
     parent_stream_type = LeagueStream
 
     def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
-        context = {"draft_id": record["draft_id"]}
+        context = {"draft_id": record["draft_id"], "league_id": record["league_id"]}
         return context
 
 
 class LeagueDraftPicksStream(LeagueDraftsStream):
     path = "/draft/{draft_id}/picks"
-    # schema = schemas.league_draft_picks
+    schema = schemas.league_draft_picks
     name = "league-draft-picks"
     parent_stream_type = LeagueDraftsStream
 
+    def get_url(self, context: Optional[dict]) -> str:
+        url = self.url_base + self.path.format(
+            league_id=context["league_id"], draft_id=context["draft_id"]
+        )
+        return url
 
-class LeagueDraftTradedPicksStream(LeagueDraftsStream):
+    def post_process(self, row: dict, context: Optional[dict] = None) -> Optional[dict]:
+        row["league_id"] = context["league_id"]
+        return row
+
+
+class LeagueDraftTradedPicksStream(LeagueDraftPicksStream):
     path = "/draft/{draft_id}/traded_picks"
-    # schema = schemas.league_traded_draft_picks
+    schema = schemas.league_traded_picks
     name = "league-traded-draft-picks"
     parent_stream_type = LeagueDraftsStream
 
@@ -219,7 +229,26 @@ class SportPlayersStream(SleeperStream):
     path = "/players/{sport}"
     # schema = schemas.sport_state
     name = "sport-players"
+    records_jsonpath = "$*"
 
     def get_url(self, context: Optional[dict]) -> str:
         url = self.url_base + self.path.format(sport=self.config["sport"])
         return url
+
+    def get_records(self, context: Optional[dict]) -> Iterable[Dict[str, Any]]:
+        """Return a generator of row-type dictionary objects.
+
+        Each row emitted should be a dictionary of property names to their values.
+
+        Args:
+            context: Stream partition or context dictionary.
+
+        Yields:
+            One item per (possibly processed) record in the API.
+        """
+        for record in self.request_records(context):
+            transformed_record = self.post_process(record, context)
+            if transformed_record is None:
+                # Record filtered out during post_process()
+                continue
+            yield transformed_record
