@@ -182,7 +182,57 @@ league_traded_picks = th.PropertiesList(
     th.Property("league_id", th.StringType),
     th.Property("roster_id", th.IntegerType, description="roster_id of ORIGINAL owner"),
     th.Property("owner_id", th.IntegerType, description="roster_id of current owner"),
-    th.Property("previous_owner_id", th.IntegerType, description="roster_id of the previous owner"),
+    th.Property(
+        "previous_owner_id",
+        th.IntegerType,
+        description="roster_id of the previous owner",
+    ),
     th.Property("round", th.IntegerType, description="which round the pick is"),
     th.Property("season", th.StringType, description="which season the pick is for"),
+).to_dict()
+
+league_drafts = th.PropertiesList(
+    th.Property("league_id", th.StringType),
+    th.Property("draft_id", th.StringType),
+    th.Property("type", th.StringType),
+    th.Property("status", th.StringType),
+    th.Property("sport", th.StringType),
+    th.Property("season", th.StringType),
+    th.Property("season_type", th.StringType),
+    th.Property("draft_order", th.ObjectType()),
+    th.Property("settings", th.ObjectType()),
+    th.Property("metadata", th.ObjectType()),
+    th.Property("start_time", th.IntegerType),
+    th.Property("creators", th.ArrayType(th.StringType)),
+    th.Property("created", th.IntegerType),
+    th.Property("last_picked", th.IntegerType),
+    th.Property("last_message_time", th.IntegerType),
+    th.Property("last_message_id", th.StringType),
+).to_dict()
+
+league_draft_picks = th.PropertiesList(
+    th.Property("league_id", th.StringType),
+    th.Property("draft_id", th.StringType),
+    th.Property("roster_id", th.IntegerType),
+    th.Property("round", th.IntegerType),
+    th.Property("player_id", th.StringType),
+    th.Property("pick_no", th.IntegerType),
+    th.Property("picked_by", th.StringType),
+    th.Property("draft_slot", th.IntegerType),
+    th.Property("is_keeper", th.BooleanType),
+    th.Property(
+        "metadata",
+        th.ObjectType(
+            th.Property("first_name", th.StringType),
+            th.Property("last_name", th.StringType),
+            th.Property("team", th.StringType),
+            th.Property("sport", th.StringType),
+            th.Property("position", th.StringType),
+            th.Property("player_id", th.StringType),
+            th.Property("number", th.StringType),
+            th.Property("years_exp", th.StringType),
+            th.Property("news_updated", th.StringType),
+            th.Property("injury_status", th.StringType),
+        ),
+    ),
 ).to_dict()

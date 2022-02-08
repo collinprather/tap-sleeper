@@ -1,6 +1,6 @@
 from singer_sdk import typing as th
 
-schema = th.PropertiesList(
+trending_players = th.PropertiesList(
     th.Property("player_id", th.StringType, description="The player's unique id"),
     th.Property(
         "count",
