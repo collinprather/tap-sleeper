@@ -1,9 +1,7 @@
 """Stream type classes for tap-sleeper."""
 
-import copy
-from typing import Any, Dict, Iterable, Optional, cast
+from typing import Any, Dict, Iterable, Optional
 
-import requests
 from singer_sdk.streams import RESTStream
 
 from tap_sleeper import schemas
@@ -227,28 +225,10 @@ class LeagueDraftTradedPicksStream(LeagueDraftPicksStream):
 
 class SportPlayersStream(SleeperStream):
     path = "/players/{sport}"
-    # schema = schemas.sport_state
+    schema = schemas.players
     name = "sport-players"
-    records_jsonpath = "$*"
+    records_jsonpath = "$.*"
 
     def get_url(self, context: Optional[dict]) -> str:
         url = self.url_base + self.path.format(sport=self.config["sport"])
         return url
-
-    def get_records(self, context: Optional[dict]) -> Iterable[Dict[str, Any]]:
-        """Return a generator of row-type dictionary objects.
-
-        Each row emitted should be a dictionary of property names to their values.
-
-        Args:
-            context: Stream partition or context dictionary.
-
-        Yields:
-            One item per (possibly processed) record in the API.
-        """
-        for record in self.request_records(context):
-            transformed_record = self.post_process(record, context)
-            if transformed_record is None:
-                # Record filtered out during post_process()
-                continue
-            yield transformed_record

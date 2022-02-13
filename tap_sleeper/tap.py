@@ -16,25 +16,27 @@ from tap_sleeper.streams import (
     LeagueTradedPicksStream,
     LeagueTransactionsStream,
     LeagueUsersStream,
+    SportPlayersStream,
     SportStateStream,
     TrendingDownPlayersStream,
     TrendingUpPlayersStream,
 )
 
 STREAM_TYPES = [
-    LeagueDraftsStream,
     LeagueDraftPicksStream,
-    # LeagueMatchupsStream,
-    # LeaguePlayoffWinnersBracketStream,
-    # LeaguePlayoffLosersBracketStream,
-    # LeagueRostersStream,
+    LeagueDraftsStream,
+    LeagueMatchupsStream,
+    LeaguePlayoffLosersBracketStream,
+    LeaguePlayoffWinnersBracketStream,
+    LeagueRostersStream,
     LeagueStream,
-    # LeagueTransactionsStream,
-    # LeagueTradedPicksStream,
-    # LeagueUsersStream,
+    LeagueTradedPicksStream,
+    LeagueTransactionsStream,
+    LeagueUsersStream,
     SportStateStream,
-    # TrendingDownPlayersStream,
-    # TrendingUpPlayersStream,
+    TrendingDownPlayersStream,
+    TrendingUpPlayersStream,
+    SportPlayersStream,
 ]
 
 
@@ -55,6 +57,18 @@ class TapSleeper(Tap):
             th.StringType,
             required=True,
             description="Unique identifier for the sleeper league",
+        ),
+        th.Property(
+            "trending_players_lookback_hours",
+            th.IntegerType,
+            required=False,
+            description="Total hours to lookback when requesting the current trending players",
+        ),
+        th.Property(
+            "trending_players_limit",
+            th.IntegerType,
+            required=False,
+            description="Total number of players to return when requesting the current trending players",
         ),
     ).to_dict()
 

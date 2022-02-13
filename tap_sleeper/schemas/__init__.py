@@ -9,5 +9,5 @@ from tap_sleeper.schemas.league import (
     league_transactions,
     league_users,
 )
-from tap_sleeper.schemas.players import trending_players
+from tap_sleeper.schemas.players import players, trending_players
 from tap_sleeper.schemas.sport_state import schema as sport_state
