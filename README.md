@@ -1,6 +1,6 @@
-# tap-sleeper
+# tap-sleeper ![logo](logo.gif)
 
-`tap-sleeper` is a Singer tap for Sleeper.
+`tap-sleeper` is a Singer tap for the [Sleeper](https://sleeper.app/) [api](https://docs.sleeper.app/).
 
 Built with the [Meltano Tap SDK](https://sdk.meltano.com) for Singer Taps.
 
