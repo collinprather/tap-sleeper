@@ -1,3 +1,5 @@
+from typing import Union
+
 from singer_sdk import typing as th
 
 trending_players = th.PropertiesList(
@@ -21,7 +23,7 @@ players = th.PropertiesList(
     th.Property("sportradar_id", th.StringType),
     th.Property("swish_id", th.IntegerType),
     th.Property("pandascore_id", th.StringType),
-    th.Property("gsis_id", th.IntegerType),
+    th.Property("gsis_id", th.StringType),
     th.Property("first_name", th.StringType),
     th.Property("last_name", th.StringType),
     th.Property("full_name", th.StringType),

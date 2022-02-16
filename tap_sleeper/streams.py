@@ -12,6 +12,17 @@ class SleeperStream(RESTStream):
     records_jsonpath = "$[*]"
 
 
+class SportPlayersStream(SleeperStream):
+    path = "/players/{sport}"
+    schema = schemas.players
+    name = "sport-players"
+    records_jsonpath = "$.*"
+
+    def get_url(self, context: Optional[dict]) -> str:
+        url = self.url_base + self.path.format(sport=self.config["sport"])
+        return url
+
+
 class TrendingPlayersStream(SleeperStream):
     path = "/players/{sport}/trending/{type}"
     schema = schemas.trending_players
@@ -61,6 +72,18 @@ class LeagueStream(SleeperStream):
     schema = schemas.league
     name = "league"
     parent_stream_type = SportStateStream
+
+    def __init__(self, tap) -> None:
+        """Initialize the League stream and assert that config includes league_id."""
+        super().__init__(tap=tap, name=self.name, schema=self.schema)
+        if "league_id" not in self.config.keys():
+            raise InvalidConfigError(
+                """
+                Must supply league_id in config to pull league-related streams.
+                If you would not like to replicate league-related streams, remove
+                them from your catalog.json (or meltano.yml).
+                """
+            )
 
     def get_url(self, context: Optional[dict]) -> str:
         url = self.url_base + self.path.format(league_id=self.config["league_id"])
@@ -223,12 +246,5 @@ class LeagueDraftTradedPicksStream(LeagueDraftPicksStream):
     parent_stream_type = LeagueDraftsStream
 
 
-class SportPlayersStream(SleeperStream):
-    path = "/players/{sport}"
-    schema = schemas.players
-    name = "sport-players"
-    records_jsonpath = "$.*"
-
-    def get_url(self, context: Optional[dict]) -> str:
-        url = self.url_base + self.path.format(sport=self.config["sport"])
-        return url
+class InvalidConfigError(Exception):
+    pass

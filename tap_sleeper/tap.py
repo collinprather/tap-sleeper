@@ -55,7 +55,7 @@ class TapSleeper(Tap):
         th.Property(
             "league_id",
             th.StringType,
-            required=True,
+            required=False,
             description="Unique identifier for the sleeper league",
         ),
         th.Property(
