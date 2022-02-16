@@ -27,7 +27,6 @@ jobs:
           LINTER_RULES_PATH: /
           PYTHON_BLACK_CONFIG_FILE: pyproject.toml
           PYTHON_ISORT_CONFIG_FILE: pyproject.toml
-          VALIDATE_JSCPD: 'true'
           VALIDATE_JSON: 'true'
           VALIDATE_YAML: 'true'
           VALIDATE_PYTHON_BLACK: 'true'
