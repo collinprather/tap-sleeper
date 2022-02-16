@@ -1,4 +1,4 @@
-# tap-sleeper ![logo](logo.gif)
+![logo](logo.gif)
 
 `tap-sleeper` is a Singer tap for the [Sleeper](https://sleeper.app/) [api](https://docs.sleeper.app/).
 
