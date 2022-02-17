@@ -30,5 +30,7 @@ jobs:
       run: |
         poetry install
     - name: Test with pytest
+      env:
+        SAMPLE_CONFIG_LEAGUE_ID: ${{ secrets.SAMPLE_CONFIG_LEAGUE_ID }}
       run: |
         poetry run pytest --capture=no
