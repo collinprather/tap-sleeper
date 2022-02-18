@@ -73,19 +73,15 @@ class LeagueStream(SleeperStream):
     name = "league"
     parent_stream_type = SportStateStream
 
-    def __init__(self, tap) -> None:
-        """Initialize the League stream and assert that config includes league_id."""
-        super().__init__(tap=tap, name=self.name, schema=self.schema)
+    def get_url(self, context: Optional[dict]) -> str:
         if "league_id" not in self.config.keys():
-            raise InvalidConfigError(
+            raise ConfigIncompleteForSelectedStreamsError(
                 """
                 Must supply league_id in config to pull league-related streams.
                 If you would not like to replicate league-related streams, remove
                 them from your catalog.json (or meltano.yml).
                 """
             )
-
-    def get_url(self, context: Optional[dict]) -> str:
         url = self.url_base + self.path.format(league_id=self.config["league_id"])
         return url
 
@@ -246,5 +242,5 @@ class LeagueDraftTradedPicksStream(LeagueDraftPicksStream):
     parent_stream_type = LeagueDraftsStream
 
 
-class InvalidConfigError(Exception):
+class ConfigIncompleteForSelectedStreamsError(Exception):
     pass

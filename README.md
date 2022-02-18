@@ -6,14 +6,10 @@
 [![Test Tap](https://github.com/collinprather/tap-sleeper/actions/workflows/test-tap.yml/badge.svg)](https://github.com/collinprather/tap-sleeper/actions/workflows/test-tap.yml)
 [![CodeQL](https://github.com/collinprather/tap-sleeper/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/collinprather/tap-sleeper/actions/workflows/codeql-analysis.yml)
 
-`tap-sleeper` is a Singer tap for the [Sleeper](https://sleeper.app/) [api](https://docs.sleeper.app/).
-
-Built with the [Meltano Tap SDK](https://sdk.meltano.com) for Singer Taps.
+`tap-sleeper` is a [Singer](https://hub.meltano.com/singer/spec) tap for the [Sleeper](https://sleeper.app/) [api](https://docs.sleeper.app/), built with the [Meltano Tap SDK](https://sdk.meltano.com), which makes it easy to pull the latest news about any NFL players, trending players, or granular information about your fantasy football league.
 
 
 ## Installation
-
-- [ ] `Developer TODO:` Update the below as needed to correctly describe the install procedure. For instance, if you do not have a PyPi repo, or if you want users to directly install from your git repo, you can modify this step as appropriate.
 
 ```bash
 pipx install tap-sleeper
@@ -23,7 +19,12 @@ pipx install tap-sleeper
 
 ### Accepted Config Options
 
-- [ ] `Developer TODO:` Provide a list of config options accepted by the tap.
+| **Property**                    | **Type** | **Required** | **Description**                                                                |
+|---------------------------------|----------|--------------|--------------------------------------------------------------------------------|
+| sport                           | string   | True         | Professional sport league, ie nfl, nba, etc"                                   |
+| league_id                       | string   | False        | Unique identifier for the sleeper league                                       |
+| trending_players_lookback_hours | integer  | False        | Total hours to lookback when requesting the current trending players           |
+| trending_players_limit          | integer  | False        | Total number of players to return when requesting the current trending players |
 
 A full list of supported settings and capabilities for this
 tap is available by running:
@@ -31,10 +32,6 @@ tap is available by running:
 ```bash
 tap-sleeper --about
 ```
-
-### Source Authentication and Authorization
-
-- [ ] `Developer TODO:` If your tap requires special access on the source system, or any special authentication requirements, provide those here.
 
 ## Usage
 
@@ -49,8 +46,6 @@ tap-sleeper --config CONFIG --discover > ./catalog.json
 ```
 
 ## Developer Resources
-
-- [ ] `Developer TODO:` As a first step, scan the entire project for the text "`TODO:`" and complete any recommended steps, deleting the "TODO" references once completed.
 
 ### Initialize your Development Environment
 
