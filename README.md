@@ -1,12 +1,15 @@
 # tap-sleeper ![logo](logo.gif)
 
+
+[![PyPI](https://img.shields.io/pypi/v/tap-sleeper.svg?color=blue)](https://pypi.org/project/tap-sleeper/)
+[![Python versions](https://img.shields.io/pypi/pyversions/tap-sleeper.svg)](https://pypi.org/project/tap-sleeper/)
 [![Singer](https://img.shields.io/badge/Singer-Tap-purple.svg)](https://hub.meltano.com/taps/dbt)
 [![Super-Linter](https://github.com/collinprather/tap-sleeper/actions/workflows/super-linter.yml/badge.svg)](https://github.com/collinprather/tap-sleeper/actions/workflows/super-linter.yml)
 [![TestPyPI](https://github.com/collinprather/tap-sleeper/actions/workflows/test-pypi.yml/badge.svg)](https://github.com/collinprather/tap-sleeper/actions/workflows/test-pypi.yml)
 [![Test Tap](https://github.com/collinprather/tap-sleeper/actions/workflows/test-tap.yml/badge.svg)](https://github.com/collinprather/tap-sleeper/actions/workflows/test-tap.yml)
 [![CodeQL](https://github.com/collinprather/tap-sleeper/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/collinprather/tap-sleeper/actions/workflows/codeql-analysis.yml)
 
-`tap-sleeper` is a [Singer](https://hub.meltano.com/singer/spec) tap for the [Sleeper](https://sleeper.app/) [api](https://docs.sleeper.app/), built with the [Meltano Tap SDK](https://sdk.meltano.com), which makes it easy to pull the latest news about any NFL players, trending players, or granular information about your fantasy football league.
+`tap-sleeper` is a [Singer](https://hub.meltano.com/singer/spec) tap for the [Sleeper](https://sleeper.app/) [api](https://docs.sleeper.app/), built with the [Meltano Tap SDK](https://sdk.meltano.com), which makes it easy to pull the latest news about or status of any NFL players, or granular information about your fantasy football league.
 
 
 ## Installation
@@ -21,7 +24,7 @@ pipx install tap-sleeper
 
 | **Property**                    | **Type** | **Required** | **Description**                                                                |
 |---------------------------------|----------|--------------|--------------------------------------------------------------------------------|
-| sport                           | string   | True         | Professional sport league, ie nfl, nba, etc"                                   |
+| sport                           | string   | True         | Professional sport league, ie nfl, nba, etc                                    |
 | league_id                       | string   | False        | Unique identifier for the sleeper league                                       |
 | trending_players_lookback_hours | integer  | False        | Total hours to lookback when requesting the current trending players           |
 | trending_players_limit          | integer  | False        | Total number of players to return when requesting the current trending players |
