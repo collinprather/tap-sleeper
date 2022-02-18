@@ -1,5 +1,11 @@
 # tap-sleeper ![logo](logo.gif)
 
+[![Singer](https://img.shields.io/badge/Singer-Tap-purple.svg)](https://hub.meltano.com/taps/dbt)
+[![Super-Linter](https://github.com/collinprather/tap-sleeper/actions/workflows/super-linter.yml/badge.svg)](https://github.com/collinprather/tap-sleeper/actions/workflows/super-linter.yml)
+[![TestPyPI](https://github.com/collinprather/tap-sleeper/actions/workflows/test-pypi.yml/badge.svg)](https://github.com/collinprather/tap-sleeper/actions/workflows/test-pypi.yml)
+[![Test Tap](https://github.com/collinprather/tap-sleeper/actions/workflows/test-tap.yml/badge.svg)](https://github.com/collinprather/tap-sleeper/actions/workflows/test-tap.yml)
+[![CodeQL](https://github.com/collinprather/tap-sleeper/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/collinprather/tap-sleeper/actions/workflows/codeql-analysis.yml)
+
 `tap-sleeper` is a Singer tap for the [Sleeper](https://sleeper.app/) [api](https://docs.sleeper.app/).
 
 Built with the [Meltano Tap SDK](https://sdk.meltano.com) for Singer Taps.
