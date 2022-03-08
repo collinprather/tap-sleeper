@@ -1,9 +1,9 @@
 # tap-sleeper ![logo](logo.gif)
 
 
+[![Singer](https://img.shields.io/badge/Singer-Tap-purple.svg)](https://hub.meltano.com/taps/sleeper)
 [![PyPI](https://img.shields.io/pypi/v/tap-sleeper.svg?color=blue)](https://pypi.org/project/tap-sleeper/)
 [![Python versions](https://img.shields.io/pypi/pyversions/tap-sleeper.svg)](https://pypi.org/project/tap-sleeper/)
-[![Singer](https://img.shields.io/badge/Singer-Tap-purple.svg)](https://hub.meltano.com/singer/taps/)
 [![Super-Linter](https://github.com/collinprather/tap-sleeper/actions/workflows/super-linter.yml/badge.svg)](https://github.com/collinprather/tap-sleeper/actions/workflows/super-linter.yml)
 [![TestPyPI](https://github.com/collinprather/tap-sleeper/actions/workflows/test-pypi.yml/badge.svg)](https://github.com/collinprather/tap-sleeper/actions/workflows/test-pypi.yml)
 [![Test Tap](https://github.com/collinprather/tap-sleeper/actions/workflows/test-tap.yml/badge.svg)](https://github.com/collinprather/tap-sleeper/actions/workflows/test-tap.yml)
