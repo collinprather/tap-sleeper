@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tap-sleeper"
-version = "0.1.1"
+version = "0.2.0"
 description = "`tap-sleeper` is a Singer tap for Sleeper, built with the Meltano SDK for Singer Taps."
 authors = ["Collin Prather"]
 keywords = [
@@ -14,14 +14,15 @@ repository = "https://github.com/collinprather/tap-sleeper"
 
 [tool.poetry.dependencies]
 python = ">=3.8,<3.12"
-singer-sdk = "^0.35.0"
+singer-sdk = {version="~0.35.0"}
 
 [tool.poetry.dev-dependencies]
 pre-commit = "^2.16.0"
-pytest = "^6.2.5"
 isort = "^5.10.1"
 black = "^21.9b0"
 mypy = "^0.910"
+pytest = ">=7.4.0"
+singer-sdk = { version="~=0.35.0", extras = ["testing"] }
 
 [tool.black]
 line-length = 88
