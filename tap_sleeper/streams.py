@@ -17,7 +17,6 @@ class SportPlayersStream(SleeperStream):
     schema = schemas.players
     name = "sport-players"
     records_jsonpath = "$.*"
-    selected_by_default = False
 
     def get_url(self, context: Optional[dict]) -> str:
         url = self.url_base + self.path.format(sport=self.config["sport"])
@@ -75,7 +74,7 @@ class LeagueStream(SleeperStream):
     parent_stream_type = SportStateStream
 
     def get_url(self, context: Optional[dict]) -> str:
-        if "league_id" not in self.config.keys():
+        if ("league_id" not in self.config.keys()) or (self.config["league_id"] == ""):
             raise ConfigIncompleteForSelectedStreamsError(
                 """
                 Must supply league_id in config to pull league-related streams.
