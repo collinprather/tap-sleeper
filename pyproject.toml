@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tap-sleeper"
-version = "0.2.0"
+version = "0.3.0"
 description = "`tap-sleeper` is a Singer tap for Sleeper, built with the Meltano SDK for Singer Taps."
 authors = ["Collin Prather"]
 keywords = [

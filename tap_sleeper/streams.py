@@ -63,7 +63,7 @@ class SportStateStream(SleeperStream):
         return url
 
     def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
-        context = {"week": record["leg"]}
+        context = {"current_week": record["leg"], "current_season": record["season"]}
         return context
 
 
@@ -74,7 +74,7 @@ class LeagueStream(SleeperStream):
     parent_stream_type = SportStateStream
 
     def get_url(self, context: Optional[dict]) -> str:
-        if "league_id" not in self.config.keys():
+        if ("league_id" not in self.config.keys()) or (self.config["league_id"] == ""):
             raise ConfigIncompleteForSelectedStreamsError(
                 """
                 Must supply league_id in config to pull league-related streams.
@@ -86,25 +86,29 @@ class LeagueStream(SleeperStream):
         return url
 
     def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
-        context = {"league_id": record["league_id"], "week": context["week"]}
-        return context
+        max_week = context["current_week"]
+        if record["season"] < context["current_season"]:
+            max_week = record["settings"].get("leg", 17)
+        new_context = {"league_id": record["league_id"], "max_week": max_week}
+        child_context = {**context, **new_context}
+        return child_context
 
 
-class LeagueRostersStream(LeagueStream):
+class LeagueRostersStream(SleeperStream):
     path = "/league/{league_id}/rosters"
     schema = schemas.league_rosters
     name = "league-rosters"
     parent_stream_type = LeagueStream
 
 
-class LeagueUsersStream(LeagueStream):
+class LeagueUsersStream(SleeperStream):
     path = "/league/{league_id}/users"
     schema = schemas.league_users
     name = "league-users"
     parent_stream_type = LeagueStream
 
 
-class LeagueWeeklyStream(LeagueStream):
+class LeagueWeeklyStream(SleeperStream):
     def request_records(self, context: Optional[dict]) -> Iterable[dict]:
         """Request records from REST endpoint(s), returning response records.
 
@@ -117,7 +121,7 @@ class LeagueWeeklyStream(LeagueStream):
         decorated_request = self.request_decorator(self._request)
 
         # looping from beginning of season to current week
-        for replication_week in range(1, context["week"] + 1):
+        for replication_week in range(1, context["max_week"] + 1):
             context["replication_week"] = replication_week
             prepared_request = self.prepare_request(context, next_page_token=None)
             resp = decorated_request(prepared_request, context)
@@ -153,7 +157,7 @@ class LeagueTransactionsStream(LeagueWeeklyStream):
     parent_stream_type = LeagueStream
 
 
-class LeaguePlayoffBracketStream(LeagueStream):
+class LeaguePlayoffBracketStream(SleeperStream):
     path = "/league/{league_id}/{bracket_type}"
     schema = schemas.league_playoff_bracket
     parent_stream_type = LeagueStream
@@ -196,7 +200,7 @@ class LeaguePlayoffLosersBracketStream(LeaguePlayoffBracketStream):
         return row
 
 
-class LeagueTradedPicksStream(LeagueStream):
+class LeagueTradedPicksStream(SleeperStream):
     path = "/league/{league_id}/traded_picks"
     schema = schemas.league_traded_picks
     name = "league-traded-picks"
@@ -207,7 +211,7 @@ class LeagueTradedPicksStream(LeagueStream):
         return row
 
 
-class LeagueDraftsStream(LeagueStream):
+class LeagueDraftsStream(SleeperStream):
     path = "/league/{league_id}/drafts"
     schema = schemas.league_drafts
     name = "league-drafts"
@@ -218,7 +222,7 @@ class LeagueDraftsStream(LeagueStream):
         return context
 
 
-class LeagueDraftPicksStream(LeagueDraftsStream):
+class LeagueDraftPicksStream(SleeperStream):
     path = "/draft/{draft_id}/picks"
     schema = schemas.league_draft_picks
     name = "league-draft-picks"
@@ -235,7 +239,7 @@ class LeagueDraftPicksStream(LeagueDraftsStream):
         return row
 
 
-class LeagueDraftTradedPicksStream(LeagueDraftPicksStream):
+class LeagueDraftTradedPicksStream(SleeperStream):
     path = "/draft/{draft_id}/traded_picks"
     schema = schemas.league_traded_picks
     name = "league-traded-draft-picks"
