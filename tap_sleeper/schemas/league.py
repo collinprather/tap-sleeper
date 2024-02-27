@@ -80,8 +80,8 @@ league_matchups = th.PropertiesList(
     th.Property("starters", th.ArrayType(th.StringType)),
     th.Property("players", th.ArrayType(th.StringType)),
     th.Property("points", th.NumberType),
-    th.Property("starters_points", th.NumberType),
-    th.Property("players_points", th.NumberType),
+    th.Property("starters_points", th.ArrayType(th.NumberType)),
+    th.Property("players_points", th.ObjectType()),
     th.Property("custom_points", th.NumberType),
 ).to_dict()
 
