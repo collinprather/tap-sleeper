@@ -73,7 +73,7 @@ league_users = th.PropertiesList(
 ).to_dict()
 
 league_matchups = th.PropertiesList(
-    th.Property("league_id", th.IntegerType),
+    th.Property("league_id", th.StringType),
     th.Property("roster_id", th.IntegerType),
     th.Property("matchup_id", th.IntegerType),
     th.Property("week", th.IntegerType),
@@ -81,7 +81,15 @@ league_matchups = th.PropertiesList(
     th.Property("players", th.ArrayType(th.StringType)),
     th.Property("points", th.NumberType),
     th.Property("starters_points", th.ArrayType(th.NumberType)),
-    th.Property("players_points", th.ObjectType()),
+    th.Property(
+        "players_points",
+        th.ArrayType(
+            th.ObjectType(
+                th.Property("player_id", th.StringType),
+                th.Property("points", th.NumberType),
+            ),
+        ),
+    ),
     th.Property("custom_points", th.NumberType),
 ).to_dict()
 
@@ -94,8 +102,24 @@ league_transactions = th.PropertiesList(
     th.Property("roster_ids", th.ArrayType(th.IntegerType)),
     th.Property("consenter_ids", th.ArrayType(th.IntegerType)),
     th.Property("leg", th.IntegerType, description="in football, this is the week"),
-    th.Property("adds", th.ObjectType()),
-    th.Property("drops", th.ObjectType()),
+    th.Property(
+        "adds",
+        th.ArrayType(
+            th.ObjectType(
+                th.Property("player_id", th.StringType),
+                th.Property("roster_id", th.IntegerType),
+            ),
+        ),
+    ),
+    th.Property(
+        "drops",
+        th.ArrayType(
+            th.ObjectType(
+                th.Property("player_id", th.StringType),
+                th.Property("roster_id", th.IntegerType),
+            ),
+        ),
+    ),
     th.Property(
         "settings",
         th.ObjectType(
@@ -233,6 +257,7 @@ league_draft_picks = th.PropertiesList(
             th.Property("years_exp", th.StringType),
             th.Property("news_updated", th.StringType),
             th.Property("injury_status", th.StringType),
+            th.Property("status", th.StringType),
         ),
     ),
 ).to_dict()

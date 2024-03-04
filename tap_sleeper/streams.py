@@ -149,12 +149,28 @@ class LeagueMatchupsStream(LeagueWeeklyStream):
     name = "league-matchups"
     parent_stream_type = LeagueStream
 
+    def post_process(self, row, context):
+        column = "players_points"
+        if row.get(column):
+            array_adds = [{"player_id": k, "points": v} for k, v in row[column].items()]
+            row[column] = array_adds
+        return row
+
 
 class LeagueTransactionsStream(LeagueWeeklyStream):
     path = "/league/{league_id}/transactions/{week}"
     schema = schemas.league_transactions
     name = "league-transactions"
     parent_stream_type = LeagueStream
+
+    def post_process(self, row, context):
+        for column in ["adds", "drops"]:
+            if row.get(column):
+                array_adds = [
+                    {"player_id": k, "roster_id": v} for k, v in row[column].items()
+                ]
+                row[column] = array_adds
+        return row
 
 
 class LeaguePlayoffBracketStream(SleeperStream):
