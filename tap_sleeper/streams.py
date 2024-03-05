@@ -259,6 +259,8 @@ class LeagueDraftPicksStream(SleeperStream):
     schema = schemas.league_draft_picks
     name = "league-draft-picks"
     parent_stream_type = LeagueDraftsStream
+    ignore_parent_replication_keys = True
+    state_partitioning_keys = []
 
     def get_url(self, context: Optional[dict]) -> str:
         url = self.url_base + self.path.format(
@@ -276,6 +278,8 @@ class LeagueDraftTradedPicksStream(SleeperStream):
     schema = schemas.league_traded_picks
     name = "league-traded-draft-picks"
     parent_stream_type = LeagueDraftsStream
+    ignore_parent_replication_keys = True
+    state_partitioning_keys = []
 
 
 class ConfigIncompleteForSelectedStreamsError(Exception):
