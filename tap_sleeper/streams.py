@@ -99,6 +99,8 @@ class LeagueRostersStream(SleeperStream):
     schema = schemas.league_rosters
     name = "league-rosters"
     parent_stream_type = LeagueStream
+    ignore_parent_replication_keys = True
+    state_partitioning_keys = []
 
 
 class LeagueUsersStream(SleeperStream):
@@ -106,6 +108,8 @@ class LeagueUsersStream(SleeperStream):
     schema = schemas.league_users
     name = "league-users"
     parent_stream_type = LeagueStream
+    ignore_parent_replication_keys = True
+    state_partitioning_keys = []
 
 
 class LeagueWeeklyStream(SleeperStream):
@@ -148,12 +152,16 @@ class LeagueMatchupsStream(LeagueWeeklyStream):
     schema = schemas.league_matchups
     name = "league-matchups"
     parent_stream_type = LeagueStream
+    ignore_parent_replication_keys = True
+    state_partitioning_keys = []
 
     def post_process(self, row, context):
         column = "players_points"
         if row.get(column):
-            array_adds = [{"player_id": k, "points": v} for k, v in row[column].items()]
-            row[column] = array_adds
+            new_array_column = [
+                {"player_id": k, "points": v} for k, v in row[column].items()
+            ]
+            row[column] = new_array_column
         return row
 
 
@@ -162,14 +170,16 @@ class LeagueTransactionsStream(LeagueWeeklyStream):
     schema = schemas.league_transactions
     name = "league-transactions"
     parent_stream_type = LeagueStream
+    ignore_parent_replication_keys = True
+    state_partitioning_keys = []
 
     def post_process(self, row, context):
         for column in ["adds", "drops"]:
             if row.get(column):
-                array_adds = [
+                new_array_column = [
                     {"player_id": k, "roster_id": v} for k, v in row[column].items()
                 ]
-                row[column] = array_adds
+                row[column] = new_array_column
         return row
 
 
@@ -177,6 +187,8 @@ class LeaguePlayoffBracketStream(SleeperStream):
     path = "/league/{league_id}/{bracket_type}"
     schema = schemas.league_playoff_bracket
     parent_stream_type = LeagueStream
+    ignore_parent_replication_keys = True
+    state_partitioning_keys = []
 
     def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
         return context
@@ -221,6 +233,8 @@ class LeagueTradedPicksStream(SleeperStream):
     schema = schemas.league_traded_picks
     name = "league-traded-picks"
     parent_stream_type = LeagueStream
+    ignore_parent_replication_keys = True
+    state_partitioning_keys = []
 
     def post_process(self, row: dict, context: Optional[dict] = None) -> Optional[dict]:
         row["league_id"] = context["league_id"]
@@ -232,6 +246,8 @@ class LeagueDraftsStream(SleeperStream):
     schema = schemas.league_drafts
     name = "league-drafts"
     parent_stream_type = LeagueStream
+    ignore_parent_replication_keys = True
+    state_partitioning_keys = []
 
     def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
         context = {"draft_id": record["draft_id"], "league_id": record["league_id"]}
@@ -243,6 +259,8 @@ class LeagueDraftPicksStream(SleeperStream):
     schema = schemas.league_draft_picks
     name = "league-draft-picks"
     parent_stream_type = LeagueDraftsStream
+    ignore_parent_replication_keys = True
+    state_partitioning_keys = []
 
     def get_url(self, context: Optional[dict]) -> str:
         url = self.url_base + self.path.format(
@@ -260,6 +278,8 @@ class LeagueDraftTradedPicksStream(SleeperStream):
     schema = schemas.league_traded_picks
     name = "league-traded-draft-picks"
     parent_stream_type = LeagueDraftsStream
+    ignore_parent_replication_keys = True
+    state_partitioning_keys = []
 
 
 class ConfigIncompleteForSelectedStreamsError(Exception):
